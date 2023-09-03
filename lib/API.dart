@@ -23,43 +23,63 @@ class _HomePage2State extends State<HomePage2> {
     super.initState();
     fetchData();
   }
+    String jsonString =''' {
+      "name": "John Smith",
+      "email": "john@example.com"
+    }''';
+
+  pp() {
+    // Map<String, dynamic> user = jsonDecode(jsonString);
+    // print("helllo +${user}");
+    Map<String, dynamic> userMap = jsonDecode(jsonString);
+    var user = User.fromJson(userMap);
+
+    print('yoyoy+ ${userMap}');
+    print('yoyoy22+ ${user}');
+
+    print('Howdy, ${user.name}!');
+    print('We sent the verification link to ${user.email}.');
+
+    String json = jsonEncode(user);
+    print('encode + ${json}');
+
+  }
+
+
+
+
+
+
+
 
   Future<void> fetchData() async {
-    final response = await http.get(Uri.parse("http://127.0.0.1:5000/students"));
-
-    final jsonResponse2 = jsonDecode(response.body);
-
-
-    final jsonResponse3 = jsonResponse2['data'];
-
-
-    //Employee emp = Employee.fromJson(jsonDecode(jsonResponse3));
-    //print(emp);
-
-    print(response.body);
-    print(response.statusCode);
+    // final response = await (http.Request("GET",Uri.parse("https://api.publicapis.org/entries"))).send();
+    //
+    // final jsonResponse2 =  await response.stream.bytesToString();
+    //
+    // final  jsonResponse3 = jsonResponse2[10];
+    //
+    //
+    // print(jsonResponse3);
 
 
-    print (jsonResponse3[0]);
-    print (jsonResponse3[0]['employee_name']);
+  }
 
+
+
+  Future<Album> fetchAlbum() async {
+    final response = await http
+        .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
+    print('ye hai +${response.body}');
 
     if (response.statusCode == 200) {
-      final jsonResponse2 = jsonDecode(response.body);
-
-      print (jsonResponse2['data']);
-      final jsonResponse3 = jsonResponse2['data'];
-      print (jsonResponse3[0]);
-      final jsonResponse4=jsonResponse3[5]['employee_name'];
-
-
-
-      setState(() {
-        _responseData=jsonResponse4;
-
-      });
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Album.fromJson(jsonDecode(response.body));
     } else {
-      _responseData= "nai chla";
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
     }
   }
 
@@ -70,12 +90,13 @@ class _HomePage2State extends State<HomePage2> {
         title: Text('API Integration'),
       ),
       body: Center(
-        child: TextField(
-          readOnly: true,
-          controller: TextEditingController(text:_responseData ),
-          decoration: InputDecoration(
-            labelText: 'API Response',
-          ),
+
+
+        child:Column(
+          children: [ElevatedButton(onPressed: fetchAlbum, child: Text('press to print'))],
+
+
+
         ),
       ),
     );
@@ -118,5 +139,48 @@ void postData() async {
   } else {
     // Request failed
     print('POST request failed with status: ${response.statusCode}');
+  }
+}
+
+
+class User {
+  final String name;
+  final String email;
+
+
+  User (this.name,this.email);
+
+  User.fromJson(Map<String,dynamic> json)
+  : name = json['name'],
+  email = json['email'];
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'email': email,
+  };
+
+
+
+
+}
+
+
+class Album {
+  final int userId;
+  final int id;
+  final String title;
+
+  const Album({
+    required this.userId,
+    required this.id,
+    required this.title,
+  });
+
+  factory Album.fromJson(Map<String, dynamic> json) {
+    return Album(
+      userId: json['userId'],
+      id: json['id'],
+      title: json['title'],
+    );
   }
 }

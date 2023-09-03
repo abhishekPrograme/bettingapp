@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -10,7 +11,15 @@ class Bid {
   Bid({required this.name, required this.amount, required this.date});
 }
 
-class BidApp extends StatelessWidget {
+class BidApp extends StatefulWidget {
+  @override
+  State<BidApp> createState() => _BidAppState();
+}
+
+class _BidAppState extends State<BidApp> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,14 +37,53 @@ class BidScreen extends StatefulWidget {
 class _BidScreenState extends State<BidScreen> {
   final List<Bid> bids = [];
 
-  void _addBid(String name, double amount) {
+  void _addBid(String name, double amount) async {
     final newBid = Bid(name: name, amount: amount, date: DateTime.now());
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    List<String> bidList = prefs.getStringList('bids') ?? [];
+    bidList.add('${newBid.name},${newBid.amount},${newBid.date}');
+
+    await prefs.setStringList('bids', bidList);
+
     setState(() {
       bids.add(newBid);
     });
   }
 
   @override
+
+  void initState() {
+    super.initState();
+    _loadBids();
+  }
+  void _loadBids() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    List<String> bidList = prefs.getStringList('bids') ?? [];
+    List<Bid> loadedBids = [];
+
+    for (String bidData in bidList) {
+      List<String> bidParts = bidData.split(',');
+      if (bidParts.length == 3) {
+        String name = bidParts[0];
+        double amount = double.parse(bidParts[1]);
+        DateTime date = DateTime.parse(bidParts[2]);
+        loadedBids.add(Bid(name: name, amount: amount, date: date));
+      }
+    }
+
+    setState(() {
+      bids.addAll(loadedBids);
+    });
+  }
+
+
+
+
+
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -119,3 +167,5 @@ class _BidFormState extends State<BidForm> {
     );
   }
 }
+
+
