@@ -90,21 +90,21 @@ class Bet {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class _BetListScreenState extends State<BetListScreen> {
-  List<Bet> _betList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadBets();
-  }
-
-  Future<void> _loadBets() async {
-    List<Bet> bets = await DatabaseHelper.instance.getAllBets();
-    setState(() {
-      _betList = bets;
-    });
-  }
-
-// ... Rest of the code remains the same
-}
+// class _BetListScreenState extends State<BetListScreen> {
+//   List<Bet> _betList = [];
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _loadBets();
+//   }
+//
+//   Future<void> _loadBets() async {
+//     List<Bet> bets = await DatabaseHelper.instance.getAllBets();
+//     setState(() {
+//       _betList = bets;
+//     });
+//   }
+//
+// // ... Rest of the code remains the same
+// }

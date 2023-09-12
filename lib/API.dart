@@ -3,6 +3,7 @@ import 'dart:convert';
 
 
 import 'package:flutter/material.dart';
+import 'utebi.dart';
 
 
 
@@ -69,8 +70,12 @@ class _HomePage2State extends State<HomePage2> {
 
   Future<Album> fetchAlbum() async {
     final response = await http
-        .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
-    print('ye hai +${response.body}');
+        .post(Uri.parse('http://139.59.81.101:8080/Utebi/rest/service/getBetsList'));
+    print('ye hai one +${response.body}');
+    print('ye hai two +${response.request}');
+    print('ye hai three+${response.headers}');
+    print('ye hai four+${response.statusCode}');
+    print('ye hai five+${response.reasonPhrase}');
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
@@ -93,7 +98,7 @@ class _HomePage2State extends State<HomePage2> {
 
 
         child:Column(
-          children: [ElevatedButton(onPressed: fetchAlbum, child: Text('press to print'))],
+          children: [ElevatedButton(onPressed: postData, child: Text('press to print'))],
 
 
 
@@ -109,38 +114,65 @@ class _HomePage2State extends State<HomePage2> {
 
 
 void postData() async {
-  var url = Uri.parse('https://dummyjson.com/products/add');
+  var url = Uri.parse('http://139.59.81.101:8080/Utebi/rest/service/getBetsList');
 
   // Create a Map with the request body data
   var requestBody = {
 
-    "title": "His mother had always taught him",
-    "body": "His mother had always taught him not to ever think of himself as better than others. He'd tried to live by this motto. He never looked down on those who were less fortunate or who had less money than him. But the stupidity of the group of people he was talking to made him change his mind.",
-    "userId": 9.toString(),
+    "startIndex":"0",
+    "length":"10",
+    "searchString":"",
+    "sortBy":"CREATION_DATE",
+    "order":"D",
+    "status":"PENDING_INVITATION",
+    "userId":"1",
+    "notificationId":"XXXXXX",
+    "deviceOS":"Android",
+    "make":"Samsung",
+    "model":"S3",
+    "token":"QZPZobzbdYaiP8RfghQH",
+    "tokenUserId":"1",
+    "tokenUserType":"user",
+
   };
 
   // Encode the request body as JSON
   //var body = jsonEncode(requestBody);
 
   // Set the request headers
-  var headers = {
-    'Content-Type': 'application/json',
-  };
+  // var headers = {
+  //   'Content-Type': 'application/json',
+  // };
 
   // Send the POST request
   var response = await http.post(url,  body: requestBody);
   print(url);
+  print("hello"+response.body);
+
+  print('POST request successful!');
+  print('Response body: ${response.body}');
+  Map<String, dynamic> responseObject = jsony?["responseObject"];
+  List<Map<String, dynamic?>> responseObject2 = responseObject?['recordList'];
+  Map<String, dynamic?> responseObject3 = responseObject2[0];
+  String responseObject4=responseObject3["email"];
+  //Map<String, dynamic> jsonDataMap = json.decode(jsony);
+    //Map<String,dynamic> responseObject = jsonDataMap["responseObject"];
+    //Map<String, dynamic> responseObject2 = responseObject[3];
+  // var responseObject3 = responseObject2['betname'].toString();
+  print("descriptionk"+responseObject4);
+  // print("descriptionk"+responseObject.toString());
 
   // Check the response status code
   if (response.statusCode == 200) {
     // Request successful
-    print('POST request successful!');
-    print('Response body: ${response.body}');
+
   } else {
     // Request failed
     print('POST request failed with status: ${response.statusCode}');
   }
 }
+
+
 
 
 class User {
@@ -184,3 +216,4 @@ class Album {
     );
   }
 }
+
