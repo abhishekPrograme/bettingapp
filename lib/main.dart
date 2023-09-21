@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'database.dart';
 import 'singuppage.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'chat_screen.dart';
 import 'API.dart';
-import 'screen1.dart';
-import 'screen2.dart';
+import 'dashbord.dart';
 import 'screen3.dart';
 import 'betScreen.dart';
+
 
 import '';
 
@@ -103,7 +103,8 @@ class _MyHomePageState extends State<MyHomePage> {
    ChatScreen(),
 
     HomePage2(),
-    BettingTransactionScreen(),
+    MyApp3(),
+    //BettingTransactionScreen(),
     BidApp()
 
   ];
@@ -359,6 +360,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             width: 200,
                             child: ElevatedButton(
                               onPressed: ()  {
+                                postData();
+
 
 
                                 void _login(String email, String password) async {

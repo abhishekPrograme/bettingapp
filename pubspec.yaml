@@ -41,6 +41,8 @@ dependencies:
   sqflite: ^2.2.8+4
   flutter_native_splash: ^2.3.1
   path_provider: ^2.0.15
+  flutter_stripe: ^9.4.0
+  stripe_payment: ^1.1.4
 
 dev_dependencies:
   flutter_test:
